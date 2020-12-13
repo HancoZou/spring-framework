@@ -156,6 +156,8 @@ public abstract class BeanDefinitionReaderUtils {
 	 * @param definitionHolder the bean definition including name and aliases
 	 * @param registry the bean factory to register with
 	 * @throws BeanDefinitionStoreException if registration failed
+	 *
+	 * 在ClassPathXmlApplicationContext中，registry其实是个DefaultListableBeanFactory
 	 */
 	public static void registerBeanDefinition(
 			BeanDefinitionHolder definitionHolder, BeanDefinitionRegistry registry)

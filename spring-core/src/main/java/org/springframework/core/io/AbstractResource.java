@@ -55,11 +55,13 @@ public abstract class AbstractResource implements Resource {
 	@Override
 	public boolean exists() {
 		// Try file existence: can we find the file in the file system?
+		// 先基于 File 进行判断
 		try {
 			return getFile().exists();
 		}
 		catch (IOException ex) {
 			// Fall back to stream existence: can we open the stream?
+			// 再基于 InputStream 进行判断
 			try {
 				getInputStream().close();
 				return true;
@@ -75,6 +77,7 @@ public abstract class AbstractResource implements Resource {
 	/**
 	 * This implementation always returns {@code true} for a resource
 	 * that {@link #exists() exists} (revised as of 5.1).
+	 * 如果exist()存在的话，则总是返回true
 	 */
 	@Override
 	public boolean isReadable() {
@@ -100,6 +103,7 @@ public abstract class AbstractResource implements Resource {
 	/**
 	 * This implementation throws a FileNotFoundException, assuming
 	 * that the resource cannot be resolved to a URL.
+	 * 抛出 FileNotFoundException 异常，交给子类实现
 	 */
 	@Override
 	public URL getURL() throws IOException {
@@ -109,6 +113,7 @@ public abstract class AbstractResource implements Resource {
 	/**
 	 * This implementation builds a URI based on the URL returned
 	 * by {@link #getURL()}.
+	 * 根据getURL()得到的url来构建URI
 	 */
 	@Override
 	public URI getURI() throws IOException {
@@ -124,6 +129,7 @@ public abstract class AbstractResource implements Resource {
 	/**
 	 * This implementation throws a FileNotFoundException, assuming
 	 * that the resource cannot be resolved to an absolute file path.
+	 * 抛出 FileNotFoundException 异常，交给子类实现
 	 */
 	@Override
 	public File getFile() throws IOException {
@@ -135,6 +141,8 @@ public abstract class AbstractResource implements Resource {
 	 * with the result of {@link #getInputStream()}.
 	 * <p>This is the same as in {@link Resource}'s corresponding default method
 	 * but mirrored here for efficient JVM-level dispatching in a class hierarchy.
+	 *
+	 * 根据 getInputStream() 的返回结果构建 ReadableByteChannel
 	 */
 	@Override
 	public ReadableByteChannel readableChannel() throws IOException {
@@ -146,6 +154,9 @@ public abstract class AbstractResource implements Resource {
 	 * content length. Subclasses will almost always be able to provide
 	 * a more optimal version of this, e.g. checking a File length.
 	 * @see #getInputStream()
+	 *
+	 * 获取资源的长度
+	 * 这个资源内容长度实际就是资源的字节长度，通过全部读取一遍来判断
 	 */
 	@Override
 	public long contentLength() throws IOException {
@@ -201,6 +212,7 @@ public abstract class AbstractResource implements Resource {
 	/**
 	 * This implementation throws a FileNotFoundException, assuming
 	 * that relative resources cannot be created for this resource.
+	 * 抛出 FileNotFoundException 异常，交给子类实现
 	 */
 	@Override
 	public Resource createRelative(String relativePath) throws IOException {

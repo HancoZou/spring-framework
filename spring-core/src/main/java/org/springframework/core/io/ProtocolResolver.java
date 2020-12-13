@@ -25,6 +25,9 @@ import org.springframework.lang.Nullable;
  * custom protocols to be handled without subclassing the loader
  * implementation (or application context implementation).
  *
+ * 用户自定义协议资源解决策略
+ * (SPI)
+ *
  * @author Juergen Hoeller
  * @since 4.3
  * @see DefaultResourceLoader#addProtocolResolver

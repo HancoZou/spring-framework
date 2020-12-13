@@ -75,6 +75,7 @@ public class SimpleAliasRegistry implements AliasRegistry {
 					}
 				}
 				checkForAliasCircle(name, alias);
+				// 保存在一个ConcurrentHashMap中，别名为key，原来的名字为value
 				this.aliasMap.put(alias, name);
 				if (logger.isTraceEnabled()) {
 					logger.trace("Alias definition '" + alias + "' registered for name '" + name + "'");

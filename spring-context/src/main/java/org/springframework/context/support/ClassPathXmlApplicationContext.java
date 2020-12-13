@@ -138,8 +138,12 @@ public class ClassPathXmlApplicationContext extends AbstractXmlApplicationContex
 			String[] configLocations, boolean refresh, @Nullable ApplicationContext parent)
 			throws BeansException {
 
+		// 向上一直到 AbstractApplicationContext，参数parent为null，this.resourcePatternResolver = getResourcePatternResolver();
+		// PathMatchingResourcePatternResolver支持Ant风格的路径解析
 		super(parent);
+		// 解析configLocation，将location保存在AbstractRefreshableConfigApplicationContext的private String[] configLocations中
 		setConfigLocations(configLocations);
+		// 核心逻辑: refresh()
 		if (refresh) {
 			refresh();
 		}

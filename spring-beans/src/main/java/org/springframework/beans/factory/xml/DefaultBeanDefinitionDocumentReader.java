@@ -128,9 +128,12 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 		BeanDefinitionParserDelegate parent = this.delegate;
 		this.delegate = createDelegate(getReaderContext(), root, parent);
 
+		// default namespace: http://www.springframework.org/schema/beans
 		if (this.delegate.isDefaultNamespace(root)) {
+			// 检查profile
 			String profileSpec = root.getAttribute(PROFILE_ATTRIBUTE);
 			if (StringUtils.hasText(profileSpec)) {
+				// profile属性可以分割
 				String[] specifiedProfiles = StringUtils.tokenizeToStringArray(
 						profileSpec, BeanDefinitionParserDelegate.MULTI_VALUE_ATTRIBUTE_DELIMITERS);
 				// We cannot use Profiles.of(...) since profile expressions are not supported
@@ -145,7 +148,9 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 			}
 		}
 
+		// preProcessXml方法是个空实现，供子类去覆盖，目的在于给子类一个把我们自定义的标签转为Spring标准标签的机会
 		preProcessXml(root);
+		// 20200418自己理解：解析配置之后，将对应的数据保存在beanFactory的beanDefinitionNames和beanDefinitionMap中
 		parseBeanDefinitions(root, this.delegate);
 		postProcessXml(root);
 
@@ -166,7 +171,9 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 	 * @param root the DOM root element of the document
 	 */
 	protected void parseBeanDefinitions(Element root, BeanDefinitionParserDelegate delegate) {
+		// 对于非默认命名空间的元素交由delegate处理
 		if (delegate.isDefaultNamespace(root)) {
+			// 即import, alias, bean, 嵌套的beans四种元素
 			NodeList nl = root.getChildNodes();
 			for (int i = 0; i < nl.getLength(); i++) {
 				Node node = nl.item(i);
@@ -205,6 +212,8 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 	/**
 	 * Parse an "import" element and load the bean definitions
 	 * from the given resource into the bean factory.
+	 *
+	 * 比如说：<import resource="customerContext.xml" />
 	 */
 	protected void importBeanDefinitionResource(Element ele) {
 		String location = ele.getAttribute(RESOURCE_ATTRIBUTE);
@@ -273,8 +282,11 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 
 	/**
 	 * Process the given alias element, registering the alias with the registry.
+	 *
+	 * 比如说：<alias name="componentA-dataSource" alias="componentB-dataSource"/>
 	 */
 	protected void processAliasRegistration(Element ele) {
+		// 确认有效
 		String name = ele.getAttribute(NAME_ATTRIBUTE);
 		String alias = ele.getAttribute(ALIAS_ATTRIBUTE);
 		boolean valid = true;
@@ -288,6 +300,8 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 		}
 		if (valid) {
 			try {
+				// registry 就是 DefaultListableBeanFactory
+				// 保存在一个ConcurrentHashMap中，别名为key，原来的名字为value
 				getReaderContext().getRegistry().registerAlias(name, alias);
 			}
 			catch (Exception ex) {

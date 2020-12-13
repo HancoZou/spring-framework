@@ -32,6 +32,9 @@ import org.springframework.util.ResourceUtils;
  * from Strings when running in an ApplicationContext, using the particular
  * context's resource loading strategy.
  *
+ * 统一资源定位器
+ * 定义资源加载器，主要应用于根据给定的资源文件地址，返回对应的 Resource
+ *
  * @author Juergen Hoeller
  * @since 10.03.2004
  * @see Resource
@@ -50,14 +53,17 @@ public interface ResourceLoader {
 	 * <p>The handle should always be a reusable resource descriptor,
 	 * allowing for multiple {@link Resource#getInputStream()} calls.
 	 * <p><ul>
-	 * <li>Must support fully qualified URLs, e.g. "file:C:/test.dat".
-	 * <li>Must support classpath pseudo-URLs, e.g. "classpath:test.dat".
-	 * <li>Should support relative file paths, e.g. "WEB-INF/test.dat".
+	 * <li>Must support fully qualified URLs, e.g. "file:C:/test.dat". URL位置资源
+	 * <li>Must support classpath pseudo-URLs, e.g. "classpath:test.dat". ClassPath位置资源
+	 * <li>Should support relative file paths, e.g. "WEB-INF/test.dat". 相对路径资源
 	 * (This will be implementation-specific, typically provided by an
 	 * ApplicationContext implementation.)
 	 * </ul>
 	 * <p>Note that a Resource handle does not imply an existing resource;
 	 * you need to invoke {@link Resource#exists} to check for existence.
+	 *
+	 * 根据所提供资源的路径 location 返回 Resource 实例，但是它不确保该 Resource 一定存在，需要调用 Resource#exist() 方法来判断
+	 *
 	 * @param location the resource location
 	 * @return a corresponding Resource handle (never {@code null})
 	 * @see #CLASSPATH_URL_PREFIX
@@ -71,6 +77,8 @@ public interface ResourceLoader {
 	 * <p>Clients which need to access the ClassLoader directly can do so
 	 * in a uniform manner with the ResourceLoader, rather than relying
 	 * on the thread context ClassLoader.
+	 * 返回 ClassLoader 实例
+	 *
 	 * @return the ClassLoader
 	 * (only {@code null} if even the system ClassLoader isn't accessible)
 	 * @see org.springframework.util.ClassUtils#getDefaultClassLoader()

@@ -327,6 +327,7 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 					"Detected cyclic loading of " + encodedResource + " - check your import definitions!");
 		}
 		try {
+			// 获取inputStream
 			InputStream inputStream = encodedResource.getResource().getInputStream();
 			try {
 				InputSource inputSource = new InputSource(inputStream);
@@ -390,6 +391,7 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 
 		try {
 			Document doc = doLoadDocument(inputSource, resource);
+			// bean解析，返回注册的数量
 			int count = registerBeanDefinitions(doc, resource);
 			if (logger.isDebugEnabled()) {
 				logger.debug("Loaded " + count + " bean definitions from " + resource);
@@ -423,6 +425,8 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 
 	/**
 	 * Actually load the specified document using the configured DocumentLoader.
+	 * 使用配置的DocumentLoader(DefaultDocumentLoader) 实际加载指定的文档.
+	 *
 	 * @param inputSource the SAX InputSource to read from
 	 * @param resource the resource descriptor for the XML file
 	 * @return the DOM Document
@@ -431,6 +435,10 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 	 * @see DocumentLoader#loadDocument
 	 */
 	protected Document doLoadDocument(InputSource inputSource, Resource resource) throws Exception {
+		// getEntityResolver方法返回ResourceEntityResolver
+		// errorHandler是一个SimpleSaxErrorHandler对象
+		// 校验模型其实就是确定xml文件使用xsd方式还是dtd方式来校验，Spring会通过读取xml文件的方式判断应该采用哪种
+		// NamespaceAware默认false，因为默认配置了校验为true
 		return this.documentLoader.loadDocument(inputSource, getEntityResolver(), this.errorHandler,
 				getValidationModeForResource(resource), isNamespaceAware());
 	}
@@ -521,6 +529,8 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 	 * @see #setDocumentReaderClass
 	 */
 	protected BeanDefinitionDocumentReader createBeanDefinitionDocumentReader() {
+		// 反射,初始化对象
+		// 默认是DefaultBeanDefinitionDocumentReader，策略模式，通过setter方法可以更换其实现
 		return BeanUtils.instantiateClass(this.documentReaderClass);
 	}
 

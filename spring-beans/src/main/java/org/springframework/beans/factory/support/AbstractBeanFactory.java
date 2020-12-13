@@ -265,6 +265,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 			}
 
 			// Check if bean definition exists in this factory.
+			// 如果父容器存在并且存在此bean定义，那么交由其父容器初始化
 			BeanFactory parentBeanFactory = getParentBeanFactory();
 			if (parentBeanFactory != null && !containsBeanDefinition(beanName)) {
 				// Not found -> check parent.
@@ -295,6 +296,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 				checkMergedBeanDefinition(mbd, beanName, args);
 
 				// Guarantee initialization of beans that the current bean depends on.
+				// 有depends-on属性配置依赖的bean，Spring会首先初始化依赖的bean
 				String[] dependsOn = mbd.getDependsOn();
 				if (dependsOn != null) {
 					for (String dep : dependsOn) {
@@ -302,6 +304,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 							throw new BeanCreationException(mbd.getResourceDescription(), beanName,
 									"Circular depends-on relationship between '" + beanName + "' and '" + dep + "'");
 						}
+						// 依赖关系保存在DefaultSingletonBeanRegistry中
 						registerDependentBean(dep, beanName);
 						try {
 							getBean(dep);
@@ -1128,6 +1131,8 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 	 * and resolving aliases to canonical names.
 	 * @param name the user-specified name
 	 * @return the transformed bean name
+	 *
+	 * 将FactoryBean的前缀去掉以及将别名转为真实的名字
 	 */
 	protected String transformedBeanName(String name) {
 		return canonicalName(BeanFactoryUtils.transformedBeanName(name));

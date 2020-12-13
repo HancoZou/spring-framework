@@ -422,6 +422,7 @@ public class BeanDefinitionParserDelegate {
 		}
 
 		String beanName = id;
+		// 如果id为空，别名（其实是name）不为空的话，将别名的第一个值赋值给id
 		if (!StringUtils.hasText(beanName) && !aliases.isEmpty()) {
 			beanName = aliases.remove(0);
 			if (logger.isTraceEnabled()) {
@@ -430,10 +431,14 @@ public class BeanDefinitionParserDelegate {
 			}
 		}
 
+		// 默认null
 		if (containingBean == null) {
+			// 校验id是否已重复，如果重复直接抛异常
+			// 校验是通过内部一个HashSet完成的，出现过的id都会保存进此Set
 			checkNameUniqueness(beanName, aliases, ele);
 		}
 
+		// 如果name和id属性都没有指定，那么Spring会自己生成一个
 		AbstractBeanDefinition beanDefinition = parseBeanDefinitionElement(ele, beanName, containingBean);
 		if (beanDefinition != null) {
 			if (!StringUtils.hasText(beanName)) {
@@ -495,6 +500,8 @@ public class BeanDefinitionParserDelegate {
 	/**
 	 * Parse the bean definition itself, without regard to name or aliases. May return
 	 * {@code null} if problems occurred during the parsing of the bean definition.
+	 *
+	 * 解析bean定义本身，而不考虑名称或别名
 	 */
 	@Nullable
 	public AbstractBeanDefinition parseBeanDefinitionElement(

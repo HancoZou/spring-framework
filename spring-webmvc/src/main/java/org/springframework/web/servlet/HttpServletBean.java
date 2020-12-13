@@ -148,12 +148,16 @@ public abstract class HttpServletBean extends HttpServlet implements Environment
 	public final void init() throws ServletException {
 
 		// Set bean properties from init parameters.
+		// 将servlet config中的配置插入到propertyValueList中
 		PropertyValues pvs = new ServletConfigPropertyValues(getServletConfig(), this.requiredProperties);
 		if (!pvs.isEmpty()) {
 			try {
+				// 包装DispatcherServlet，准备放入容器
 				BeanWrapper bw = PropertyAccessorFactory.forBeanPropertyAccess(this);
+				// 用以加载spring-mvc配置文件
 				ResourceLoader resourceLoader = new ServletContextResourceLoader(getServletContext());
 				bw.registerCustomEditor(Resource.class, new ResourceEditor(resourceLoader, getEnvironment()));
+				// 没有子类实现此方法
 				initBeanWrapper(bw);
 				bw.setPropertyValues(pvs, true);
 			}
