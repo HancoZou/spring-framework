@@ -99,6 +99,10 @@ class ApplicationContextAwareProcessor implements BeanPostProcessor {
 		return bean;
 	}
 
+	/**
+	 * 实现这些Aware接口的bean在被初始化之后，可以取得一些对应的资源
+	 * 比如项目中自定义一个util, 实现ApplicationContextAware接口，获取applicationContext
+	 */
 	private void invokeAwareInterfaces(Object bean) {
 		if (bean instanceof Aware) {
 			if (bean instanceof EnvironmentAware) {

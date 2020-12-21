@@ -208,6 +208,7 @@ public class PathMatchingResourcePatternResolver implements ResourcePatternResol
 	private PathMatcher pathMatcher = new AntPathMatcher();
 
 	// 三种不同参数的构造函数
+	// 在实例化时可以指定一个ResourceLoader，如果没有，则赋值一个DefaultResourceLoader
 
 	/**
 	 * Create a new PathMatchingResourcePatternResolver with a DefaultResourceLoader.
@@ -500,6 +501,11 @@ public class PathMatchingResourcePatternResolver implements ResourcePatternResol
 	 * Find all resources that match the given location pattern via the
 	 * Ant-style PathMatcher. Supports resources in jar files and zip files
 	 * and in the file system.
+	 *
+	 * 完成的内容：
+	 * 	1. 确定目录，获取该目录下的所有资源
+	 * 	2. 在所获得的所有资源中进行迭代匹配，获取我们想要的资源
+	 *
 	 * @param locationPattern the location pattern to match
 	 * @return the result as Resource array
 	 * @throws IOException in case of I/O errors

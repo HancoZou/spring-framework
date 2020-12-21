@@ -47,6 +47,8 @@ import org.springframework.util.StringUtils;
  * against {@link Qualifier qualifier annotations} on the field or parameter to be autowired.
  * Also supports suggested expression values through a {@link Value value} annotation.
  *
+ * 提供解析 {@link Qualifier} （和 {@link Autowired} ？） 注解的方法
+ *
  * <p>Also supports JSR-330's {@link javax.inject.Qualifier} annotation, if available.
  *
  * @author Mark Fisher

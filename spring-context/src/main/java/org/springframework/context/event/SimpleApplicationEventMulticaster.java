@@ -122,6 +122,10 @@ public class SimpleApplicationEventMulticaster extends AbstractApplicationEventM
 	}
 
 
+	/**
+	 * 当产生Spring事件时，会默认调用multicastEvent来广播事件，遍历所有监听器，
+	 * 并使用onApplicationEvent方法处理
+	 */
 	@Override
 	public void multicastEvent(ApplicationEvent event) {
 		multicastEvent(event, resolveDefaultEventType(event));

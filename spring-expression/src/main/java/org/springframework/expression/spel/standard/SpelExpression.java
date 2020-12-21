@@ -42,6 +42,8 @@ import org.springframework.util.Assert;
  * specified context. During expression evaluation the context may be asked to resolve
  * references to types, beans, properties, and methods.
  *
+ * 解释器模式？
+ *
  * @author Andy Clement
  * @author Juergen Hoeller
  * @since 3.0

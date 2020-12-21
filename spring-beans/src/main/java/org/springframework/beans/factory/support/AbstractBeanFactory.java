@@ -243,6 +243,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 		Object bean;
 
 		// Eagerly check singleton cache for manually registered singletons.
+		// 先从单例缓存中读取（ObjectFactory），解决循环依赖（再确认）
 		Object sharedInstance = getSingleton(beanName);
 		if (sharedInstance != null && args == null) {
 			if (logger.isTraceEnabled()) {
@@ -265,7 +266,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 			}
 
 			// Check if bean definition exists in this factory.
-			// 如果父容器存在并且存在此bean定义，那么交由其父容器初始化
+			// 如果父容器存在，且容器中没有找到该bean，则从父容器去查找
 			BeanFactory parentBeanFactory = getParentBeanFactory();
 			if (parentBeanFactory != null && !containsBeanDefinition(beanName)) {
 				// Not found -> check parent.
@@ -1161,6 +1162,8 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 	 */
 	protected void initBeanWrapper(BeanWrapper bw) {
 		bw.setConversionService(getConversionService());
+		// 进行批量的通用属性编辑器注册
+		// 注册后，在属性填充的环节便可以直接让Spring使用这些编辑器进行属性的解析了
 		registerCustomEditors(bw);
 	}
 
@@ -1465,6 +1468,9 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 	/**
 	 * Evaluate the given String as contained in a bean definition,
 	 * potentially resolving it as an expression.
+	 *
+	 * 完成对spEL的解析
+	 *
 	 * @param value the value to check
 	 * @param beanDefinition the bean definition that the value comes from
 	 * @return the resolved value

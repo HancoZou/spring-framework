@@ -87,6 +87,13 @@ public class ResourceEditorRegistrar implements PropertyEditorRegistrar {
 	 * URIEditor, ClassEditor, ClassArrayEditor.
 	 * <p>If this registrar has been configured with a {@link ResourcePatternResolver},
 	 * a ResourceArrayPropertyEditor will be registered as well.
+	 *
+	 * 注册了一系列的常用类型的属性编辑器
+	 * 例如：代码doRegisterEditor(registry,Class.class, new ClassEditor(classLoader))实现的功能就是注册Class类对应的属性编辑器。
+	 * 那么，注册后，一旦某个实体bean中存在一些Class类型的属性，那么Spring会调用ClassEditor将配置中定义的String类型转换为Class类型并进行赋值
+	 *
+	 * 自定义属性编辑器：实现 {@link PropertyEditorRegistrar} 接口
+	 *
 	 * @see org.springframework.core.io.ResourceEditor
 	 * @see org.springframework.beans.propertyeditors.InputStreamEditor
 	 * @see org.springframework.beans.propertyeditors.InputSourceEditor

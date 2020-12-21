@@ -37,6 +37,9 @@ import org.springframework.beans.BeansException;
  * If bean instance interaction is required, consider implementing
  * {@link BeanPostProcessor} instead.
  *
+ * Spring IoC容器允许BeanFactoryPostProcessor在容器实际实例化任何其他的bean之前读取配置元数据，并有可能修改它
+ * 如果你想改变实际的bean实例（例如从配置元数据创建的对象），那么你最好使用BeanPostProcessor
+ *
  * @author Juergen Hoeller
  * @since 06.07.2003
  * @see BeanPostProcessor
